@@ -9,7 +9,7 @@
 [![Release Date](https://img.shields.io/github/release-date/ionos-cloud/sdk-python-dbaas-mariadb.svg)](https://github.com/ionos-cloud/sdk-python-dbaas-mariadb/releases/latest)
 [![PyPI version](https://img.shields.io/pypi/v/ionoscloud-dbaas-mariadb)](https://pypi.org/project/ionoscloud-dbaas-mariadb/)
 
-![Alt text](.github/IONOS.CLOUD.BLU.svg?raw=true "Title")
+![Alt text](../.github/IONOS.CLOUD.BLU.svg?raw=true "Title")
 
 
 # Python API client for ionoscloud_dbaas_mariadb
