@@ -1,4 +1,4 @@
-# ClustersGet415Response
+# InlineObject
 
 
 ## Properties
@@ -11,19 +11,19 @@ Name | Type | Description | Notes
 ## Example
 
 ```python
-from ionoscloud_dbaas_mariadb.models.clusters_get415_response import ClustersGet415Response
+from ionoscloud_dbaas_mariadb.models.inline_object import InlineObject
 
 # TODO update the JSON string below
 json = "{}"
-# create an instance of ClustersGet415Response from a JSON string
-clusters_get415_response_instance = ClustersGet415Response.from_json(json)
+# create an instance of InlineObject from a JSON string
+inline_object_instance = InlineObject.from_json(json)
 # print the JSON string representation of the object
-print(ClustersGet415Response.to_json())
+print(InlineObject.to_json())
 
 # convert the object into a dict
-clusters_get415_response_dict = clusters_get415_response_instance.to_dict()
-# create an instance of ClustersGet415Response from a dict
-clusters_get415_response_from_dict = ClustersGet415Response.from_dict(clusters_get415_response_dict)
+inline_object_dict = inline_object_instance.to_dict()
+# create an instance of InlineObject from a dict
+inline_object_from_dict = InlineObject.from_dict(inline_object_dict)
 ```
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

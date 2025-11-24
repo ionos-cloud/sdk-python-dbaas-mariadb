@@ -7,16 +7,16 @@
 
 * [BackupsApi](api/BackupsApi.md)
 * [ClustersApi](api/ClustersApi.md)
+* [RestoreApi](api/RestoreApi.md)
 
 ## Models
 
 * [Backup](models/Backup.md)
 * [BackupList](models/BackupList.md)
-* [BackupListAllOf](models/BackupListAllOf.md)
+* [BackupProperties](models/BackupProperties.md)
 * [BackupResponse](models/BackupResponse.md)
 * [BaseBackup](models/BaseBackup.md)
 * [ClusterList](models/ClusterList.md)
-* [ClusterListAllOf](models/ClusterListAllOf.md)
 * [ClusterMetadata](models/ClusterMetadata.md)
 * [ClusterProperties](models/ClusterProperties.md)
 * [ClusterResponse](models/ClusterResponse.md)
@@ -36,8 +36,12 @@
 * [DBUser](models/DBUser.md)
 * [DayOfTheWeek](models/DayOfTheWeek.md)
 * [ErrorMessage](models/ErrorMessage.md)
+* [InlineObject](models/InlineObject.md)
 * [MaintenanceWindow](models/MaintenanceWindow.md)
 * [MariadbVersion](models/MariadbVersion.md)
 * [Pagination](models/Pagination.md)
 * [PaginationLinks](models/PaginationLinks.md)
+* [PatchClusterProperties](models/PatchClusterProperties.md)
+* [PatchClusterRequest](models/PatchClusterRequest.md)
+* [RestoreRequest](models/RestoreRequest.md)
 * [State](models/State.md)

@@ -17,19 +17,19 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt
+from datetime import datetime
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from ionoscloud_dbaas_mariadb.models.error_message import ErrorMessage
 from typing import Optional, Set
 from typing_extensions import Self
 
-class ClustersGet404Response(BaseModel):
+class RestoreRequest(BaseModel):
     """
-    ClustersGet404Response
+    Request payload to restore a cluster from a backup. 
     """ # noqa: E501
-    http_status: Optional[StrictInt] = Field(default=None, description="The HTTP status code of the operation.", alias="httpStatus")
-    messages: Optional[List[ErrorMessage]] = None
-    __properties: ClassVar[List[str]] = ["httpStatus", "messages"]
+    backup_id: Optional[StrictStr] = Field(default=None, description="The unique ID of the resource.", alias="backupId")
+    recovery_target_time: Optional[datetime] = Field(default=None, description="The timestamp to which the cluster should be restored. If empty, the backup will be applied to the latest timestamp.  This value must be supplied as ISO 8601 timestamp, the backup will be replayed up until the given timestamp. If empty, the backup will be applied completely.  Must be within the earliestRecoveryTargetTime and now.  The earliestRecoveryTargetTime can be looked up in the backup object. ", alias="recoveryTargetTime")
+    __properties: ClassVar[List[str]] = ["backupId", "recoveryTargetTime"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -49,7 +49,7 @@ class ClustersGet404Response(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of ClustersGet404Response from a JSON string"""
+        """Create an instance of RestoreRequest from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -70,18 +70,11 @@ class ClustersGet404Response(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in messages (list)
-        _items = []
-        if self.messages:
-            for _item_messages in self.messages:
-                if _item_messages:
-                    _items.append(_item_messages.to_dict())
-            _dict['messages'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of ClustersGet404Response from a dict"""
+        """Create an instance of RestoreRequest from a dict"""
         if obj is None:
             return None
 
@@ -89,8 +82,8 @@ class ClustersGet404Response(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "httpStatus": obj.get("httpStatus"),
-            "messages": [ErrorMessage.from_dict(_item) for _item in obj["messages"]] if obj.get("messages") is not None else None
+            "backupId": obj.get("backupId"),
+            "recoveryTargetTime": obj.get("recoveryTargetTime")
         })
         return _obj
 

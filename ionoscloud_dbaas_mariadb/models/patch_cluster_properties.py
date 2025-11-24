@@ -17,19 +17,26 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from ionoscloud_dbaas_mariadb.models.error_message import ErrorMessage
+from typing_extensions import Annotated
+from ionoscloud_dbaas_mariadb.models.maintenance_window import MaintenanceWindow
+from ionoscloud_dbaas_mariadb.models.mariadb_version import MariadbVersion
 from typing import Optional, Set
 from typing_extensions import Self
 
-class ClustersGet404Response(BaseModel):
+class PatchClusterProperties(BaseModel):
     """
-    ClustersGet404Response
+    Properties of the payload to change a cluster: - instances can only be increased (3, 5, 7), - mariadbVersion can only be increased (no downgrade) - storageSize can only be increased, - ram and cores can be both increased and decreased. 
     """ # noqa: E501
-    http_status: Optional[StrictInt] = Field(default=None, description="The HTTP status code of the operation.", alias="httpStatus")
-    messages: Optional[List[ErrorMessage]] = None
-    __properties: ClassVar[List[str]] = ["httpStatus", "messages"]
+    mariadb_version: Optional[MariadbVersion] = Field(default=None, alias="mariadbVersion")
+    instances: Optional[Annotated[int, Field(le=5, strict=True, ge=1)]] = Field(default=None, description="The total number of instances in the cluster (one primary and n-1 secondary). ")
+    cores: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="The number of CPU cores per instance.")
+    ram: Optional[Annotated[int, Field(strict=True, ge=4)]] = Field(default=None, description="The amount of memory per instance in gigabytes (GB).")
+    storage_size: Optional[Annotated[int, Field(le=2000, strict=True, ge=10)]] = Field(default=None, description="The amount of storage per instance in gigabytes (GB).", alias="storageSize")
+    display_name: Optional[Annotated[str, Field(strict=True, max_length=63)]] = Field(default=None, description="The friendly name of your cluster.", alias="displayName")
+    maintenance_window: Optional[MaintenanceWindow] = Field(default=None, alias="maintenanceWindow")
+    __properties: ClassVar[List[str]] = ["mariadbVersion", "instances", "cores", "ram", "storageSize", "displayName", "maintenanceWindow"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -49,7 +56,7 @@ class ClustersGet404Response(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of ClustersGet404Response from a JSON string"""
+        """Create an instance of PatchClusterProperties from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -70,18 +77,14 @@ class ClustersGet404Response(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in messages (list)
-        _items = []
-        if self.messages:
-            for _item_messages in self.messages:
-                if _item_messages:
-                    _items.append(_item_messages.to_dict())
-            _dict['messages'] = _items
+        # override the default output from pydantic by calling `to_dict()` of maintenance_window
+        if self.maintenance_window:
+            _dict['maintenanceWindow'] = self.maintenance_window.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of ClustersGet404Response from a dict"""
+        """Create an instance of PatchClusterProperties from a dict"""
         if obj is None:
             return None
 
@@ -89,8 +92,13 @@ class ClustersGet404Response(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "httpStatus": obj.get("httpStatus"),
-            "messages": [ErrorMessage.from_dict(_item) for _item in obj["messages"]] if obj.get("messages") is not None else None
+            "mariadbVersion": obj.get("mariadbVersion"),
+            "instances": obj.get("instances"),
+            "cores": obj.get("cores"),
+            "ram": obj.get("ram"),
+            "storageSize": obj.get("storageSize"),
+            "displayName": obj.get("displayName"),
+            "maintenanceWindow": MaintenanceWindow.from_dict(obj["maintenanceWindow"]) if obj.get("maintenanceWindow") is not None else None
         })
         return _obj
 

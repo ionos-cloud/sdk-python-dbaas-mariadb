@@ -17,19 +17,20 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt
+from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List, Optional
-from ionoscloud_dbaas_mariadb.models.error_message import ErrorMessage
+from ionoscloud_dbaas_mariadb.models.cluster_metadata import ClusterMetadata
+from ionoscloud_dbaas_mariadb.models.patch_cluster_properties import PatchClusterProperties
 from typing import Optional, Set
 from typing_extensions import Self
 
-class ClustersGet404Response(BaseModel):
+class PatchClusterRequest(BaseModel):
     """
-    ClustersGet404Response
+    Request payload to change a cluster.
     """ # noqa: E501
-    http_status: Optional[StrictInt] = Field(default=None, description="The HTTP status code of the operation.", alias="httpStatus")
-    messages: Optional[List[ErrorMessage]] = None
-    __properties: ClassVar[List[str]] = ["httpStatus", "messages"]
+    metadata: Optional[ClusterMetadata] = None
+    properties: Optional[PatchClusterProperties] = None
+    __properties: ClassVar[List[str]] = ["metadata", "properties"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -49,7 +50,7 @@ class ClustersGet404Response(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of ClustersGet404Response from a JSON string"""
+        """Create an instance of PatchClusterRequest from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -70,18 +71,17 @@ class ClustersGet404Response(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in messages (list)
-        _items = []
-        if self.messages:
-            for _item_messages in self.messages:
-                if _item_messages:
-                    _items.append(_item_messages.to_dict())
-            _dict['messages'] = _items
+        # override the default output from pydantic by calling `to_dict()` of metadata
+        if self.metadata:
+            _dict['metadata'] = self.metadata.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of properties
+        if self.properties:
+            _dict['properties'] = self.properties.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of ClustersGet404Response from a dict"""
+        """Create an instance of PatchClusterRequest from a dict"""
         if obj is None:
             return None
 
@@ -89,8 +89,8 @@ class ClustersGet404Response(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "httpStatus": obj.get("httpStatus"),
-            "messages": [ErrorMessage.from_dict(_item) for _item in obj["messages"]] if obj.get("messages") is not None else None
+            "metadata": ClusterMetadata.from_dict(obj["metadata"]) if obj.get("metadata") is not None else None,
+            "properties": PatchClusterProperties.from_dict(obj["properties"]) if obj.get("properties") is not None else None
         })
         return _obj
 

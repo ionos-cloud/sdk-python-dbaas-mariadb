@@ -3,4 +3,5 @@
 # import apis into api package
 from ionoscloud_dbaas_mariadb.api.backups_api import BackupsApi
 from ionoscloud_dbaas_mariadb.api.clusters_api import ClustersApi
+from ionoscloud_dbaas_mariadb.api.restore_api import RestoreApi
 
